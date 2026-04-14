@@ -34,7 +34,7 @@ public class EmployeeController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable Long id,@RequestBody @Valid EmployeeDto dto){
-        EmployeeDto updated =   service.updateEmployee(id, dto);
+        EmployeeDto updated = service.updateEmployee(id, dto);
         return ResponseEntity.ok("atualização concluída");
     }
 
