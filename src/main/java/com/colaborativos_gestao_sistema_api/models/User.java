@@ -2,6 +2,7 @@ package com.colaborativos_gestao_sistema_api.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,6 +19,7 @@ public abstract class User implements UserDetails {
     private String nome;
 
     @NotBlank(message = "Campo CPF é obrigatório")
+    @CPF(message = "CPF Inválido")
     @Size(max = 11, message = "CPF inválido")
     private String cpf;
 
