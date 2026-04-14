@@ -1,6 +1,10 @@
 package com.colaborativos_gestao_sistema_api.Exceptions;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,20 +17,35 @@ import java.util.List;
 public class RestExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<DataErrorsValidation>> tratarErro400(MethodArgumentNotValidException ex) {
-        var erros = ex.getFieldErrors();
-        return ResponseEntity.badRequest().body(erros.stream().map(DataErrorsValidation::new).toList());
-    }
-
-    private record DataErrorsValidation(String field, String message) {
-        public DataErrorsValidation(FieldError erro) {
-            this(erro.getField(), erro.getDefaultMessage());
-        }
+    public ResponseEntity<List<DataErrorsValidation>> handleBadRequest(MethodArgumentNotValidException ex) {
+        var errors = ex.getFieldErrors();
+        return ResponseEntity.badRequest().body(errors.stream().map(DataErrorsValidation::new).toList());
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<DataErrorsSimple> trustErrors(ResponseStatusException ex) {
+    public ResponseEntity<DataErrorsSimple> handleResponseStatus(ResponseStatusException ex) {
         return ResponseEntity.status(ex.getStatusCode()).body(new DataErrorsSimple(ex.getReason()));
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<DataErrorsSimple> handleUserNotFound(UsernameNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DataErrorsSimple(ex.getMessage()));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<DataErrorsSimple> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new DataErrorsSimple("Email ou Senha inválidos."));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<DataErrorsSimple> handleAuthenticationError(AuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new DataErrorsSimple(ex.getMessage()));
+    }
+
+    private record DataErrorsValidation(String field, String message) {
+        public DataErrorsValidation(FieldError error) {
+            this(error.getField(), error.getDefaultMessage());
+        }
     }
 
     private record DataErrorsSimple(String message) {}

@@ -21,7 +21,8 @@ public class EmployeeService {
     private PasswordEncoder passwordEncoder;
 
     public Employee registerEmployee(Employee employee) throws ResponseStatusException {
-        if(repository.findByEmail(employee.getEmail()).isPresent()) throw new ResponseStatusException(HttpStatus.CONFLICT, "Esse E-mail já foi cadastrado no sistema");
+        if(repository.findByEmail(employee.getEmail()).isPresent()) throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail já cadastrado no sistema");
+        if(repository.findByCpf(employee.getCpf()).isPresent()) throw new ResponseStatusException(HttpStatus.CONFLICT, "Cpf já cadastrado no sistema.");
         String hashPassword = passwordEncoder.encode(employee.getPassword());
         employee.setSenha(hashPassword);
         return repository.save(employee);
@@ -43,9 +44,7 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Funcionário não encontrado.");
-        }
+        if (!repository.existsById(id)) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Funcionário não encontrado.");
         repository.deleteById(id);
     }
 }
