@@ -1,6 +1,7 @@
 package com.colaborativos_gestao_sistema_api.models;
 
 import com.colaborativos_gestao_sistema_api.enums.Categories;
+import com.colaborativos_gestao_sistema_api.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -44,6 +45,9 @@ public class Food {
     @ManyToOne
     @JoinColumn(name = "donor_id", nullable = false)
     private Donor donor;
+
+    @NotBlank(message = "Campo status é obrigatório.")
+    private Status status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
@@ -107,6 +111,14 @@ public class Food {
 
     public void setDonor(Donor donor) {
         this.donor = donor;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public LocalDateTime getCreatedAt() {
