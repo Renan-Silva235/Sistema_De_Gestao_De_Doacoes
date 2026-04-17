@@ -30,7 +30,7 @@ public class Food {
     private String alimento;
 
     @NotNull(message = "Campo peso é obrigatório.")
-    private float peso;
+    private String peso;
 
     @NotBlank(message = "Campo validade é obrigatório.")
     private LocalDate validade;
