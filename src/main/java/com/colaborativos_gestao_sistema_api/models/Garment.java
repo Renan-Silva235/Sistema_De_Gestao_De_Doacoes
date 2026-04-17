@@ -35,8 +35,8 @@ public class Garment {
     @Size(max = 120, message = "Campo marca deve no máximo 120 caracteres.")
     private String marca;
 
-    @NotNull(message = "Campo tamanho é obrigatório")
-    private int tamanho;
+    @NotBlank(message = "Campo tamanho é obrigatório")
+    private String tamanho;
 
     @NotBlank(message = "Campo marca é obrigatório.")
     @Size(max = 25, message = "Campo marca deve no máximo 25 caracteres.")
@@ -96,11 +96,11 @@ public class Garment {
         this.marca = marca;
     }
 
-    public int getTamanho() {
+    public String getTamanho() {
         return tamanho;
     }
 
-    public void setTamanho(int tamanho) {
+    public void setTamanho(String tamanho) {
         this.tamanho = tamanho;
     }
 
