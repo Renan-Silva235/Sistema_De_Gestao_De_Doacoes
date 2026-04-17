@@ -30,7 +30,7 @@ public class Medicine {
     private String medicamento;
 
     @NotNull(message = "Campo dosagem é obrigatório.")
-    private float dosagem;
+    private String dosagem;
 
     @NotBlank(message = "Campo validade é obrigatório.")
     private LocalDate validade;
@@ -73,11 +73,11 @@ public class Medicine {
         this.medicamento = medicamento;
     }
 
-    public float getDosagem() {
+    public String getDosagem() {
         return dosagem;
     }
 
-    public void setDosagem(float dosagem) {
+    public void setDosagem(String dosagem) {
         this.dosagem = dosagem;
     }
 
