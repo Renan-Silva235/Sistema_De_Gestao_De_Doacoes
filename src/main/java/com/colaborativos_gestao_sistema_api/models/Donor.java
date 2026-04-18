@@ -7,7 +7,12 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "Doadores")
 public class Donor {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotBlank(message = "Campo Nome é obrigatório")
     @Size(min=3, max=70, message = "Campo Nome deve ter de 3 a 50 caracteres.")
@@ -20,6 +25,7 @@ public class Donor {
     private String cpf;
 
     @NotNull(message = "Campo data de nascimento é obrigatório.")
+    @Past(message = "A data de nascimento deve ser uma data passada")
     private LocalDate data_nascimento;
 
     @Email(message = "E-mail inválido")
@@ -40,6 +46,10 @@ public class Donor {
     private Employee employee;
 
     private int totalDoacoes = 0;
+
+    public Long getId() {
+        return id;
+    }
 
     public String getNome() {
         return nome;
@@ -95,6 +105,10 @@ public class Donor {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public int getTotalDoacoes() {
+        return totalDoacoes;
     }
 
     public void incrementTotal(int quantidade) {

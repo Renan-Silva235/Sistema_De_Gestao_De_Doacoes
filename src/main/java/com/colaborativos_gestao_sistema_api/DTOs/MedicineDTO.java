@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 public record MedicineDTO(Categories category,
                           String medicine,
-                          Float dosage,
+                          String dosage,
                           LocalDate exceptionDate,
                           Integer amount,
                           String employee,

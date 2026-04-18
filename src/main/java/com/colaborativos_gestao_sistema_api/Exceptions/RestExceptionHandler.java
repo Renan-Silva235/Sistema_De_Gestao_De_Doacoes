@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import java.util.List;
 
@@ -49,4 +50,9 @@ public class RestExceptionHandler {
     }
 
     private record DataErrorsSimple(String message) {}
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<DataErrorsSimple> handleHttpReadableError(HttpMessageNotReadableException ex) {
+        return ResponseEntity.badRequest().body(new DataErrorsSimple("Data de nascimento inválida."));
+    }
 }

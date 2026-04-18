@@ -38,7 +38,7 @@ public class EmployeeService {
         if(dto.name() != null) employee.setNome(dto.name());
         if(dto.Cpf() != null) employee.setCpf(dto.Cpf());
         if (dto.email() != null) employee.setEmail(dto.email());
-        if (dto.dataNascimento() != null) employee.setData_nascimento(dto.dataNascimento());
+        if (dto.born() != null) employee.setData_nascimento(dto.born());
         Employee updatedEntity = repository.save(employee);
         return new EmployeeDto(updatedEntity);
     }

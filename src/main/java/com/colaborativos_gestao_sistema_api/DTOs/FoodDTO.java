@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public record FoodDTO(Categories category,
                       String food,
-                      Float weight,
+                      String weight,
                       LocalDate expirationDate,
                       Integer amount,
                       String employee,

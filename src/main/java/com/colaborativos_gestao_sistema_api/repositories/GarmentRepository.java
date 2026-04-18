@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GarmentRepository extends JpaRepository<Garment, Long> {
-    Optional<Garment> findByProductAndBrandAndSizeAndColor(String product, String brand, String size, String color);
+    Optional<Garment> findByProdutoAndMarcaAndTamanhoAndCor(String product, String brand, String size, String color);
     List<Garment> findByProdutoContainingIgnoreCaseAndStatus(String nome, Status status);
     long countByStatus(Status status);
 }

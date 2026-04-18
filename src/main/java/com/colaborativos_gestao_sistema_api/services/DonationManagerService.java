@@ -31,7 +31,7 @@ public class DonationManagerService {
     @Transactional
     public void processDonation(Object donation){
         if(donation instanceof Food food){
-            foodRepository.findByFoodAndWeightAndExpirationDate(
+            foodRepository.findByAlimentoAndPesoAndValidade(
                     food.getAlimento(),
                     food.getPeso(),
                     food.getValidade())
@@ -44,7 +44,7 @@ public class DonationManagerService {
                                 foodRepository.save(food);
                             });
         } else if (donation instanceof Medicine medicine) {
-            medicineRepository.findByMedicineAndDosageAndExceptionDate(
+            medicineRepository.findByMedicamentoAndDosagemAndValidade(
                     medicine.getMedicamento(),
                     medicine.getDosagem(),
                     medicine.getValidade()
@@ -59,7 +59,7 @@ public class DonationManagerService {
             );
 
         } else if (donation instanceof Garment garment) {
-            garmentRepository.findByProductAndBrandAndSizeAndColor(
+            garmentRepository.findByProdutoAndMarcaAndTamanhoAndCor(
                     garment.getProduto(),
                     garment.getMarca(),
                     garment.getTamanho(),

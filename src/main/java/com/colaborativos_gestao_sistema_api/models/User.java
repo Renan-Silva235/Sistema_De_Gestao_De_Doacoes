@@ -24,6 +24,7 @@ public abstract class User implements UserDetails {
     private String cpf;
 
     @NotNull(message = "Campo data de nascimento é obrigatório.")
+    @Past(message = "A data de nascimento deve ser uma data passada")
     private LocalDate data_nascimento;
 
     @Email(message = "E-mail inválido")

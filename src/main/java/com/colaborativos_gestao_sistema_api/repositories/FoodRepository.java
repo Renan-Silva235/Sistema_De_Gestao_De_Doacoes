@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FoodRepository extends JpaRepository<Food, Long> {
-    Optional<Food> findByFoodAndWeightAndExpirationDate(String food, String weight, LocalDate expirationDAte);
+    Optional<Food> findByAlimentoAndPesoAndValidade(String food, String weight, LocalDate expirationDAte);
     List<Food> findByAlimentoContainingIgnoreCaseAndStatus(String nome, Status status);
     long countByStatus(Status status);
     List<Food> findByValidadeBeforeAndStatus(LocalDate date, Status status);
