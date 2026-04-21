@@ -29,6 +29,10 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
+
+                    // Adicione estas linhas para liberar o Swagger
+                    req.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
+
                     req.requestMatchers("/error").permitAll();
                     req.anyRequest().authenticated();
                 })
