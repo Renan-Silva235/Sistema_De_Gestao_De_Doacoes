@@ -7,7 +7,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 @Service
@@ -29,11 +31,14 @@ public class DonationManagerService {
     private EmployeeRepository employeeRepository;
 
     @Autowired
+    private ProductImageRepository productImageRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Transactional
-    public void processFullDonation(Map<String, Object> payload) {
-        // 1. Identificar Funcionário Logado via Contexto de Segurança
+    public void processFullDonationWithImage(Map<String, Object> payload, MultipartFile arquivo) throws IOException {
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Employee employee = employeeRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Funcionário logado não encontrado: " + email));
@@ -49,67 +54,49 @@ public class DonationManagerService {
         donor.incrementTotal(donor.getTotalDoacoes() + quantidadeDoada);
         donorRepository.save(donor);
 
-        String categoria = payload.getOrDefault("categoria", "").toString();
-
+        String categoria = payload.getOrDefault("categoria", "").toString().toUpperCase();
         payload.remove("categoria");
         payload.remove("donorCpf");
 
-        if ("ALIMENTICIO".equalsIgnoreCase(categoria) || "ALIMENTICIOS".equalsIgnoreCase(categoria)) {
+        Object savedProduct = null;
+
+        if (categoria.contains("ALIMENTICIO") || categoria.contains("ALIMENTICIOS")) {
             Food food = objectMapper.convertValue(payload, Food.class);
             food.setEmployee(employee);
             food.setDonor(donor);
-            saveOrUpdateFood(food);
+            savedProduct = foodRepository.save(food);
 
-        } else if ("MEDICAMENTO".equalsIgnoreCase(categoria)) {
+        } else if (categoria.contains("MEDICAMENTO")) {
             Medicine medicine = objectMapper.convertValue(payload, Medicine.class);
             medicine.setEmployee(employee);
             medicine.setDonor(donor);
-            saveOrUpdateMedicine(medicine);
+            savedProduct = medicineRepository.save(medicine);
 
-        } else if ("VESTUARIO".equalsIgnoreCase(categoria)) {
+        } else if (categoria.contains("VESTUARIO")) {
             Garment garment = objectMapper.convertValue(payload, Garment.class);
             garment.setEmployee(employee);
             garment.setDonor(donor);
-            saveOrUpdateGarment(garment);
+            savedProduct = garmentRepository.save(garment);
 
         } else {
-            throw new IllegalArgumentException("Categoria '" + categoria + "' inválida ou não suportada.");
+            throw new IllegalArgumentException("Categoria '" + categoria + "' inválida.");
         }
-    }
 
-    private void saveOrUpdateFood(Food food) {
-        foodRepository.findByAlimentoAndPesoAndValidade(
-                        food.getAlimento(), food.getPeso(), food.getValidade())
-                .ifPresentOrElse(
-                        existing -> {
-                            existing.setQuantidade(existing.getQuantidade() + food.getQuantidade());
-                            foodRepository.save(existing);
-                        },
-                        () -> foodRepository.save(food)
-                );
-    }
+        if (arquivo != null && !arquivo.isEmpty() && savedProduct != null) {
+            ProductImage img = new ProductImage();
+            img.setArquivo(arquivo.getBytes());
+            img.setNomeArquivo(arquivo.getOriginalFilename());
+            img.setTipoArquivo(arquivo.getContentType());
 
-    private void saveOrUpdateMedicine(Medicine medicine) {
-        medicineRepository.findByMedicamentoAndDosagemAndValidade(
-                        medicine.getMedicamento(), medicine.getDosagem(), medicine.getValidade())
-                .ifPresentOrElse(
-                        existing -> {
-                            existing.setQuantidade(existing.getQuantidade() + medicine.getQuantidade());
-                            medicineRepository.save(existing);
-                        },
-                        () -> medicineRepository.save(medicine)
-                );
-    }
+            if (savedProduct instanceof Food f) {
+                img.setFood(f);
+            } else if (savedProduct instanceof Medicine m) {
+                img.setMedicine(m);
+            } else if (savedProduct instanceof Garment g) {
+                img.setGarment(g);
+            }
 
-    private void saveOrUpdateGarment(Garment garment) {
-        garmentRepository.findByProdutoAndMarcaAndTamanhoAndCor(
-                        garment.getProduto(), garment.getMarca(), garment.getTamanho(), garment.getCor())
-                .ifPresentOrElse(
-                        existing -> {
-                            existing.setQuantidade(existing.getQuantidade() + garment.getQuantidade());
-                            garmentRepository.save(existing);
-                        },
-                        () -> garmentRepository.save(garment)
-                );
+            productImageRepository.save(img);
+        }
     }
 }
