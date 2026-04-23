@@ -1,6 +1,7 @@
 package com.colaborativos_gestao_sistema_api.repositories;
 
 import com.colaborativos_gestao_sistema_api.enums.Status;
+import com.colaborativos_gestao_sistema_api.models.Food;
 import com.colaborativos_gestao_sistema_api.models.Medicine;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,4 +14,6 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long>{
     List<Medicine> findByMedicamentoContainingIgnoreCaseAndStatus(String nome, Status status);
     long countByStatus(Status status);
     List<Medicine> findByValidadeBeforeAndStatus(LocalDate date, Status status);
+    List<Medicine> findByValidadeBetween(LocalDate start, LocalDate end);
+
 }

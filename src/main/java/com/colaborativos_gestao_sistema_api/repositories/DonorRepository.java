@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface DonorRepository extends JpaRepository<Donor, Long> {
+public interface    DonorRepository extends JpaRepository<Donor, Long> {
     Optional<Donor> findByEmail(String email);
     Optional<Donor> findByCpf(String cpf);
 }

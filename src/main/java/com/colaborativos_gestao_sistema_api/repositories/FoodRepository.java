@@ -13,4 +13,5 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     List<Food> findByAlimentoContainingIgnoreCaseAndStatus(String nome, Status status);
     long countByStatus(Status status);
     List<Food> findByValidadeBeforeAndStatus(LocalDate date, Status status);
+    List<Food> findByValidadeBetween(LocalDate start, LocalDate end);
 }

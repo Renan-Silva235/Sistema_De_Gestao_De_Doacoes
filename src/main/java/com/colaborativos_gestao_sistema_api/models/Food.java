@@ -2,6 +2,7 @@ package com.colaborativos_gestao_sistema_api.models;
 
 import com.colaborativos_gestao_sistema_api.enums.Categories;
 import com.colaborativos_gestao_sistema_api.enums.Status;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,7 +33,7 @@ public class Food {
     @NotNull(message = "Campo peso é obrigatório.")
     private String peso;
 
-    @NotBlank(message = "Campo validade é obrigatório.")
+    @NotNull
     private LocalDate validade;
 
     @NotNull(message = "Campo quantidade é obrigatório.")
@@ -46,7 +47,7 @@ public class Food {
     @JoinColumn(name = "donor_id", nullable = false)
     private Donor donor;
 
-    @NotBlank(message = "Campo status é obrigatório.")
+    @NotNull(message = "Campo status é obrigatório.")
     private Status status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
