@@ -17,7 +17,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("API de Gestão Colaborativa")
                         .version("1.0")
-                        .description("Documentação do sistema de gestão do PIM"))
+                        .description("Documentação do sistema de gestão"))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth", new SecurityScheme()
