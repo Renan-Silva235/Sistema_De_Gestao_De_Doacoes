@@ -22,10 +22,9 @@ public class DonorController {
     @PostMapping("/store")
     public ResponseEntity<String> store(
             @RequestBody @Valid Donor donor,
-            @AuthenticationPrincipal Employee employeeLogado // O Spring pega o objeto direto do contexto de segurança
+            @AuthenticationPrincipal Employee employeeLogin
     ){
-        // Agora você passa o objeto ou o ID que já está na memória do sistema
-        service.registerDonor(donor, employeeLogado.getId());
+        service.registerDonor(donor, employeeLogin.getId());
         return ResponseEntity.ok("Doador cadastrado com sucesso.");
     }
 
