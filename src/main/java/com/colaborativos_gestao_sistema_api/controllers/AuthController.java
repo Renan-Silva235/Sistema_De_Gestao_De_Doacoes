@@ -2,6 +2,7 @@ package com.colaborativos_gestao_sistema_api.controllers;
 
 import com.colaborativos_gestao_sistema_api.DTOs.AuthenticationDTO;
 import com.colaborativos_gestao_sistema_api.DTOs.LoginResponseDTO;
+import com.colaborativos_gestao_sistema_api.models.Employee;
 import com.colaborativos_gestao_sistema_api.services.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,11 @@ public class AuthController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((UserDetails) auth.getPrincipal());
-
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        var user = (Employee) auth.getPrincipal();
+        return ResponseEntity.ok(new LoginResponseDTO(
+                user.getNome(),
+                user.getCargo().toString(),
+                token
+        ));
     }
 }
