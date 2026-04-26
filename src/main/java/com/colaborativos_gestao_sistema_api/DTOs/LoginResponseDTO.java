@@ -1,3 +1,5 @@
 package com.colaborativos_gestao_sistema_api.DTOs;
 
-public record LoginResponseDTO(String token) {}
+import com.colaborativos_gestao_sistema_api.enums.Roles;
+
+public record LoginResponseDTO(String username, String role, String token) {}
