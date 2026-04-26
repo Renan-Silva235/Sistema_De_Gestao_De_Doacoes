@@ -37,7 +37,7 @@ public class DonationManagerService {
     private ObjectMapper objectMapper;
 
     @Transactional
-    public void processFullDonationWithImage(Map<String, Object> payload, MultipartFile arquivo) throws IOException {
+    public void processFullDonationWithImage(Map<String, Object> payload, MultipartFile file) throws IOException {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Employee employee = employeeRepository.findByEmail(email)
@@ -82,11 +82,11 @@ public class DonationManagerService {
             throw new IllegalArgumentException("Categoria '" + categoria + "' inválida.");
         }
 
-        if (arquivo != null && !arquivo.isEmpty() && savedProduct != null) {
+        if (file != null && !file.isEmpty() && savedProduct != null) {
             ProductImage img = new ProductImage();
-            img.setArquivo(arquivo.getBytes());
-            img.setNomeArquivo(arquivo.getOriginalFilename());
-            img.setTipoArquivo(arquivo.getContentType());
+            img.setArquivo(file.getBytes());
+            img.setNomeArquivo(file.getOriginalFilename());
+            img.setTipoArquivo(file.getContentType());
 
             if (savedProduct instanceof Food f) {
                 img.setFood(f);
