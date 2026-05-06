@@ -1,15 +1,21 @@
 package com.colaborativos_gestao_sistema_api.services;
 
+import com.colaborativos_gestao_sistema_api.DTOs.RecentDonationDTO;
 import com.colaborativos_gestao_sistema_api.models.*;
 import com.colaborativos_gestao_sistema_api.repositories.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -99,4 +105,26 @@ public class DonationManagerService {
             productImageRepository.save(img);
         }
     }
+
+    // No seu DonationManagerService.java
+
+    public List<RecentDonationDTO> getRecentDonations() {
+        PageRequest page = PageRequest.of(0, 10, Sort.by("id").descending());
+
+        List<RecentDonationDTO> recent = new ArrayList<>();
+
+        foodRepository.findAll(page).forEach(f ->
+                recent.add(new RecentDonationDTO(LocalDateTime.now(), f.getDonor().getNome(), f.getAlimento(), f.getQuantidade(), "ALIMENTO")));
+
+        medicineRepository.findAll(page).forEach(m ->
+                recent.add(new RecentDonationDTO(LocalDateTime.now(), m.getDonor().getNome(), m.getMedicamento(), m.getQuantidade(), "MEDICAMENTO")));
+
+        garmentRepository.findAll(page).forEach(v ->
+                recent.add(new RecentDonationDTO(LocalDateTime.now(), v.getDonor().getNome(), v.getTipo_produto(), v.getQuantidade(), "VESTUARIO")));
+
+        recent.sort((a, b) -> b.data().compareTo(a.data()));
+
+        return recent.stream().limit(10).toList();
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.colaborativos_gestao_sistema_api.controllers;
 
+import com.colaborativos_gestao_sistema_api.DTOs.RecentDonationDTO;
 import com.colaborativos_gestao_sistema_api.models.Employee;
 import com.colaborativos_gestao_sistema_api.repositories.EmployeeRepository;
 import com.colaborativos_gestao_sistema_api.services.DonationManagerService;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,5 +36,10 @@ public class DonationManagerController {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao processar: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<RecentDonationDTO>> getRecent() {
+        return ResponseEntity.ok(donationManagerService.getRecentDonations());
     }
 }
